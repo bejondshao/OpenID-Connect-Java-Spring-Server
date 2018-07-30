@@ -22,8 +22,8 @@ INSERT INTO system_scope_TEMP (scope, description, icon, restricted, default_sco
 -- Merge the temporary scopes safely into the database. This is a two-step process to keep scopes from being created on every startup with a persistent store.
 --
 
-INSERT INTO system_scope (scope, description, icon, restricted, default_scope, structured, structured_param_description) 
-  SELECT scope, description, icon, restricted, default_scope, structured, structured_param_description FROM system_scope_TEMP
+INSERT INTO system_scope (scope, description, icon, restricted, default_scope) 
+  SELECT scope, description, icon, restricted, default_scope FROM system_scope_TEMP
   ON DUPLICATE KEY UPDATE system_scope.scope = system_scope.scope;
 
 COMMIT;
