@@ -470,7 +470,7 @@
 		"pairwise": "This client uses a <b>pairwise</b> identifier, which makes it more difficult to correlate your identity between sites.",
 		"no_scopes": "This client does not have any scopes registered and is therefore allowed to request <em>any</em> scopes available on the system. Proceed with caution.",
 		"access_to": "Access to",
-		"remember": { 
+		"remember": {
 			"title": "Remember this decision",
 			"until_revoke": "remember this decision until I revoke it",
 			"one_hour": "remember this decision for one hour",
@@ -493,7 +493,11 @@
 	},
 	"login": {
 		"login_with_username_and_password": "Login with Username and Password",
+		"login_with_mobile_and_sms": "Login with Mobile and SMS",
+        "mobile": "Mobile",
 		"username": "Username",
+        "get_sms": "Get SMS code",
+        "sms": "SMS code",
 		"password": "Password",
 		"login-button": "Login",
 		"error": "The system was unable to log you in. Please try again."

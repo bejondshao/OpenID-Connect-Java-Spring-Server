@@ -53,4 +53,10 @@ public interface UserInfoService {
 	 */
 	public UserInfo getByEmailAddress(String email);
 
+	/**
+	 * Get the user registered at this server with the phone number.
+	 * @param phoneNumber
+	 * @return
+	 */
+	public UserInfo getByPhoneNumber(String phoneNumber);
 }

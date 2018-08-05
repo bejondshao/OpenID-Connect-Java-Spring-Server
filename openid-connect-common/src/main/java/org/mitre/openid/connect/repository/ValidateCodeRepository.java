@@ -17,39 +17,24 @@
  *******************************************************************************/
 package org.mitre.openid.connect.repository;
 
-import org.mitre.openid.connect.model.UserInfo;
+import org.mitre.openid.connect.model.ValidateCode;
 
 /**
- * UserInfo repository interface
+ * Address repository interface
  *
  * @author Michael Joseph Walsh
  *
  */
-public interface UserInfoRepository {
+public interface ValidateCodeRepository {
 
 	/**
-	 * Get a UserInfo object by its preferred_username field
-	 * @param username
-	 * @return
-	 */
-	public UserInfo getByUsername(String username);
-
-	/**
-	 *
-	 * Get the UserInfo object by its email field
-	 *
-	 * @param email
-	 * @return
-	 */
-	public UserInfo getByEmailAddress(String email);
-
-	/**
-	 *
-	 * Get the UserInfo object by its phone number
 	 *
 	 * @param phoneNumber
-	 * @return
+	 * @return a valid ValidateCode if it exists, null otherwise
 	 */
-	public UserInfo getByPhoneNumber(String phoneNumber);
+	public ValidateCode getByPhoneNumber(String phoneNumber);
 
+	public ValidateCode save(ValidateCode validateCode);
+
+	public void remove(ValidateCode validateCode);
 }

@@ -1,0 +1,78 @@
+package org.mitre.openid.connect.filter;
+
+import org.mitre.openid.connect.mobile.MobileAuthenticationToken;
+import org.mitre.util.SecurityConstants;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class MobileAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+	public static final String SPRING_SECURITY_FORM_MOBILE_KEY = "mobile";
+
+	private String mobileParameter = SPRING_SECURITY_FORM_MOBILE_KEY;
+	private boolean postOnly = true;
+
+	public MobileAuthenticationFilter() {
+		/**
+		 * 处理手机验证码登录请求处理url
+		 */
+		super(new AntPathRequestMatcher(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE, "POST"));
+	}
+
+	public Authentication attemptAuthentication(HttpServletRequest request,
+	                                            HttpServletResponse response) throws AuthenticationException {
+		// 判断是否是post
+		if (postOnly && !request.getMethod().equals(HttpMethod.POST.name())) {
+			throw new AuthenticationServiceException(
+				"Authentication method not supported: " + request.getMethod());
+		}
+
+		String mobile = obtainMobile(request);
+
+		if (mobile == null) {
+			mobile = "";
+		}
+
+		mobile = mobile.trim();
+
+		// 创建MobileAuthenticationToken(未认证)
+		MobileAuthenticationToken mobileAuthenticationToken = new MobileAuthenticationToken(mobile);
+
+		// 设置用户信息
+		setDetails(request, mobileAuthenticationToken);
+
+		// 将MobileAuthenticationToken交给AuthenticationManager,返回Authentication实例
+		return this.getAuthenticationManager().authenticate(mobileAuthenticationToken);
+	}
+
+	protected String obtainMobile(HttpServletRequest request) {
+		return request.getParameter(mobileParameter);
+	}
+
+	protected void setDetails(HttpServletRequest request,
+	                          MobileAuthenticationToken authRequest) {
+		authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
+	}
+
+	public void setPostOnly(boolean postOnly) {
+		this.postOnly = postOnly;
+	}
+
+	public String getMobileParameter() {
+		return mobileParameter;
+	}
+
+	public void setMobileParameter(String mobileParameter) {
+		this.mobileParameter = mobileParameter;
+	}
+
+	public boolean isPostOnly() {
+		return postOnly;
+	}
+}

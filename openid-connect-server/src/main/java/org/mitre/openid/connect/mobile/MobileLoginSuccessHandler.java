@@ -1,0 +1,102 @@
+/*
+ *    Copyright (c) 2018-2025, lengleng All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ * Neither the name of the pig4cloud.com developer nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ * Author: lengleng (wangiegie@gmail.com)
+ */
+package org.mitre.openid.connect.mobile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mitre.util.AuthUtils;
+import org.mitre.util.CommonConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.TokenRequest;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestValidator;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+
+@Component
+public class MobileLoginSuccessHandler implements AuthenticationSuccessHandler {
+	public static final String BASIC_ = "Basic ";
+
+	@Autowired
+	private ClientDetailsService clientDetailsService;
+	@Autowired
+	private AuthorizationServerTokenServices authorizationServerTokenServices;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	/**
+	 * Called when a user has been successfully authenticated.
+	 * 调用spring security oauth API 生成 oAuth2AccessToken
+	 *
+	 * @param request the request which caused the successful authentication
+	 * @param response the response
+	 * @param authentication the <tt>Authentication</tt> object which was created during
+	 */
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+
+		try {
+			String[] tokens = AuthUtils.extractAndDecodeHeader(request);
+			assert tokens.length == 2;
+			String clientId = tokens[0];
+
+			ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+
+			//校验secret
+			if (!clientDetails.getClientSecret().equals(tokens[1])) {
+				throw new InvalidClientException("Given client ID does not match authenticated client");
+			}
+
+			TokenRequest tokenRequest = new TokenRequest(new HashMap<>(), clientId, clientDetails.getScope(), "mobile");
+
+			//校验scope
+			new DefaultOAuth2RequestValidator().validateScope(tokenRequest, clientDetails);
+			OAuth2Request oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
+			OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
+			OAuth2AccessToken oAuth2AccessToken = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
+			logger.info("获取token 成功：{}", oAuth2AccessToken.getValue());
+
+			response.setCharacterEncoding(CommonConstant.UTF8);
+			response.setContentType(CommonConstant.CONTENT_TYPE);
+			response.setContentType("application/json;charset=UTF-8");
+			response.getWriter().write(objectMapper.writeValueAsString(oAuth2AccessToken));
+		} catch (IOException e) {
+			throw new BadCredentialsException(
+				"Failed to decode basic authentication token");
+		}
+	}
+
+
+}

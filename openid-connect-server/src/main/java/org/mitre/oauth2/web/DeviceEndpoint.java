@@ -80,19 +80,19 @@ public class DeviceEndpoint {
 	public static final Logger logger = LoggerFactory.getLogger(DeviceEndpoint.class);
 
 	@Autowired
-	private ClientDetailsEntityService clientService;
+	protected ClientDetailsEntityService clientService;
 
 	@Autowired
-	private SystemScopeService scopeService;
+	protected SystemScopeService scopeService;
 
 	@Autowired
-	private ConfigurationPropertiesBean config;
+	protected ConfigurationPropertiesBean config;
 
 	@Autowired
-	private DeviceCodeService deviceCodeService;
+	protected DeviceCodeService deviceCodeService;
 
 	@Autowired
-	private OAuth2RequestFactory oAuth2RequestFactory;
+	protected OAuth2RequestFactory oAuth2RequestFactory;
 
 	@RequestMapping(value = "/" + URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String requestDeviceCode(@RequestParam("client_id") String clientId, @RequestParam(name="scope", required=false) String scope, Map<String, String> parameters, ModelMap model) {

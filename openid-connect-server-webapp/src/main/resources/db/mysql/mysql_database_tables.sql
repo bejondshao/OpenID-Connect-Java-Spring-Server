@@ -381,3 +381,12 @@ CREATE TABLE IF NOT EXISTS device_code_request_parameter (
 	param VARCHAR(2048),
 	val VARCHAR(2048)
 );
+
+CREATE TABLE IF NOT EXISTS validate_code (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  phone_number VARCHAR(75),
+  code VARCHAR (225),
+  approved BOOLEAN,
+  create_date TIMESTAMP NULL,
+  expiration TIMESTAMP NULL
+);

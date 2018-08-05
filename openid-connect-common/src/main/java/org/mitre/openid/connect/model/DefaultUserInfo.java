@@ -44,15 +44,18 @@ import com.google.gson.JsonParser;
 @Table(name="user_info")
 @NamedQueries({
 	@NamedQuery(name=DefaultUserInfo.QUERY_BY_USERNAME, query = "select u from DefaultUserInfo u WHERE u.preferredUsername = :" + DefaultUserInfo.PARAM_USERNAME),
-	@NamedQuery(name=DefaultUserInfo.QUERY_BY_EMAIL, query = "select u from DefaultUserInfo u WHERE u.email = :" + DefaultUserInfo.PARAM_EMAIL)
+	@NamedQuery(name=DefaultUserInfo.QUERY_BY_EMAIL, query = "select u from DefaultUserInfo u WHERE u.email = :" + DefaultUserInfo.PARAM_EMAIL),
+	@NamedQuery(name=DefaultUserInfo.QUERY_BY_PHONE_NUMBER, query = "select u from DefaultUserInfo u WHERE u.phoneNumber = :" + DefaultUserInfo.PARAM_PHONE_NUMBER)
 })
 public class DefaultUserInfo implements UserInfo {
 
 	public static final String QUERY_BY_USERNAME = "DefaultUserInfo.getByUsername";
 	public static final String QUERY_BY_EMAIL = "DefaultUserInfo.getByEmailAddress";
+	public static final String QUERY_BY_PHONE_NUMBER = "DefaultUserInfo.getByPhoneNumber";
 
 	public static final String PARAM_USERNAME = "username";
 	public static final String PARAM_EMAIL = "email";
+	public static final String PARAM_PHONE_NUMBER = "phoneNumber";
 
 	private static final long serialVersionUID = 6078310513185681918L;
 

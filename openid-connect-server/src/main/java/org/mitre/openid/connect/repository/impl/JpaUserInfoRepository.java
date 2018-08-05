@@ -63,4 +63,18 @@ public class JpaUserInfoRepository implements UserInfoRepository {
 		return getSingleResult(query.getResultList());
 	}
 
+	/**
+	 * Get the UserInfo object by its phone number
+	 *
+	 * @param phoneNumber
+	 * @return
+	 */
+	@Override
+	public UserInfo getByPhoneNumber(String phoneNumber) {
+		TypedQuery<DefaultUserInfo> query = manager.createNamedQuery(DefaultUserInfo.QUERY_BY_PHONE_NUMBER, DefaultUserInfo.class);
+		query.setParameter(DefaultUserInfo.PARAM_PHONE_NUMBER, phoneNumber);
+
+		return getSingleResult(query.getResultList());
+	}
+
 }

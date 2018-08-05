@@ -75,4 +75,9 @@ public class DefaultUserInfoService implements UserInfoService {
 		return userInfoRepository.getByEmailAddress(email);
 	}
 
+	@Override
+	public UserInfo getByPhoneNumber(String phoneNumber) {
+		return userInfoRepository.getByPhoneNumber(phoneNumber);
+	}
+
 }
