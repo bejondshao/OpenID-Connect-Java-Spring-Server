@@ -3,12 +3,17 @@ package org.mitre.openid.connect.mobile;
 import org.mitre.openid.connect.model.UserInfo;
 import org.mitre.openid.connect.service.impl.DefaultUserInfoService;
 import org.mitre.openid.connect.util.UserDetailsImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MobileAuthenticationProvider implements AuthenticationProvider {
+
+	@Autowired
 	private DefaultUserInfoService defaultUserInfoService;
 
 	@Override

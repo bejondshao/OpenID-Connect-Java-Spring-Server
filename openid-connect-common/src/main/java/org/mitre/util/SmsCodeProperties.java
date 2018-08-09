@@ -12,9 +12,9 @@ public class SmsCodeProperties {
 
 
 	//验证码字符个数
-	private int length = 4;
+	private int length = 6;
 	//过期时间
-	private int expireIn = 60;
+	private int expireIn = 120;
 
 	private String url; //拦截的url
 

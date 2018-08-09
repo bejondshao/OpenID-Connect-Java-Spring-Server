@@ -70,7 +70,7 @@ public class SmsCodeFilter extends OncePerRequestFilter implements InitializingB
 			logger.info("----->没有配置拦验证码拦截接口<-------");
 		}
 		//短信验证码登录一定拦截
-		urls.add(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE);
+		urls.add("/login");
 	}
 
 	@Override

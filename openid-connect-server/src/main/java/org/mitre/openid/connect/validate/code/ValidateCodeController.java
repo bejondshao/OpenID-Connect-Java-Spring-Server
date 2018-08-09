@@ -5,6 +5,7 @@ import org.mitre.openid.connect.repository.ValidateCodeRepository;
 import org.mitre.openid.connect.validate.code.sms.SmsCodeSender;
 import org.mitre.util.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +48,7 @@ public class ValidateCodeController {
 	 * @throws org.springframework.web.bind.ServletRequestBindingException
 	 */
 	@GetMapping (SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/sms")
+	@Transactional
 	public void createSmsCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		//调验证码生成接口方式

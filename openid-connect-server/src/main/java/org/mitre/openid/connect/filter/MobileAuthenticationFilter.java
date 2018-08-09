@@ -8,10 +8,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
+@Component
 public class MobileAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 	public static final String SPRING_SECURITY_FORM_MOBILE_KEY = "mobile";
 
@@ -22,9 +29,10 @@ public class MobileAuthenticationFilter extends AbstractAuthenticationProcessing
 		/**
 		 * 处理手机验证码登录请求处理url
 		 */
-		super(new AntPathRequestMatcher(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE, "POST"));
+		super(new AntPathRequestMatcher("/login", "POST"));
 	}
 
+	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request,
 	                                            HttpServletResponse response) throws AuthenticationException {
 		// 判断是否是post

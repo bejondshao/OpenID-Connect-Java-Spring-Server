@@ -31,6 +31,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<security:authentication-manager id="authenticationManager">
+		<security:authentication-provider ref="mobileAuthenticationProvider" />
 		<security:authentication-provider>
 			<security:jdbc-user-service data-source-ref="dataSource"/>
 		</security:authentication-provider>
@@ -38,13 +39,22 @@
 		
 	<mvc:view-controller path="/login" view-name="login_mobile" />
 
+	<bean id="mobileAuthenticationProvider" class="org.mitre.openid.connect.mobile.MobileAuthenticationProvider">
+		<!--<security:authentication-manager id="authenticationManager" />-->
+		<!--<property name="defaultUserInfoService" value="org.mitre.openid.connect.service.impl.DefaultUserInfoService" />-->
+	</bean>
+
+	<bean id="mobileAuthenticationFilter" class="org.mitre.openid.connect.filter.MobileAuthenticationFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+
+	</bean>
 	<security:http authentication-manager-ref="authenticationManager"> 
 	
 		<security:intercept-url pattern="/authorize" access="hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/**" access="permitAll" />
-		
+
 		<security:form-login login-page="/login" authentication-failure-url="/login?error=failure" authentication-success-handler-ref="authenticationTimeStamper" />
-		<security:custom-filter ref="authRequestFilter" after="SECURITY_CONTEXT_FILTER" />
+		<security:custom-filter ref="mobileAuthenticationFilter" after="SECURITY_CONTEXT_FILTER" />
 		<security:logout logout-url="/logout" />
 		<security:anonymous />
 		<security:expression-handler ref="oauthWebExpressionHandler" />
